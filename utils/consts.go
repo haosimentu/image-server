@@ -3,12 +3,10 @@ package utils
 import (
 	"image"
 	"os"
-	_ "image/jpeg"
-	_ "image/png"
-	"image/png"
-	"image/jpeg"
 	"crypto"
 	"encoding/hex"
+	"github.com/disintegration/imaging"
+	"image/png"
 )
 
 var AllowExtMap map[string]bool = map[string]bool {
@@ -46,23 +44,25 @@ func CheckerFile(fPath string) (bool) {
 	}
 }
 
-func SaveImage(path string, img image.Image, ext string) (err error) {
-	imgfile, err := os.Create(path)
-	defer imgfile.Close()
+func SaveImage(img image.Image, path string, ext string, quality int) (err error) {
+	//imgfile, err := os.Create(path)
+	//defer imgfile.Close()
 
-	if err != nil {
-		return
-	}
+	//if err != nil {
+	//	return
+	//}
 
 	switch ext {
 	case ".png":
-		err = png.Encode(imgfile, img)
+		//err = png.Encode(imgfile, img)
+		err = imaging.Save(img, path, imaging.PNGCompressionLevel(png.CompressionLevel(quality)))
 		break
 	case ".jpeg":
-		err = jpeg.Encode(imgfile, img, &jpeg.Options{100})
+		err = imaging.Save(img, path, imaging.JPEGQuality(quality))
 		break
 	case ".jpg":
-		err = jpeg.Encode(imgfile, img, &jpeg.Options{100})
+		//err = jpeg.Encode(imgfile, img, &jpeg.Options{100})
+		err = imaging.Save(img, path, imaging.JPEGQuality(quality))
 		break
 	}
 

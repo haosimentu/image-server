@@ -14,6 +14,7 @@ type DownloadController struct {
 func (controller *DownloadController) Download() {
 	dir := os.Getenv("IMAGE_DIR")
 	fileName :=	controller.Ctx.Input.Param(":fileName")
+
 	ext := filepath.Ext(fileName)
 	ok := utils.CheckExtValid(ext)
 	if ok {
@@ -22,7 +23,9 @@ func (controller *DownloadController) Download() {
 		if exists {
 			controller.Ctx.Output.Download(fPath)
 		}
+
+		controller.warningResponse(fmt.Sprintf("文件不存在, fileName=%s", fileName))
 	}
 
-	controller.warningResponse(fmt.Sprintf("文件不存在或后缀不合法， ext=%s", ext))
+	controller.warningResponse(fmt.Sprintf("文件后缀不合法， ext=%s", ext))
 }
