@@ -5,8 +5,6 @@ import (
 	"image-server/utils"
 	"os"
 	"fmt"
-	"github.com/disintegration/imaging"
-	"strings"
 )
 
 type UploadController struct {
@@ -36,18 +34,6 @@ func (controller *UploadController) Upload() {
 			//保存原图
 			err = controller.SaveToFile(fileKey, fullPath)
 			if err == nil {
-				//保存质量为75%的压缩图
-				sImage, err := imaging.Open(fullPath)
-				if err == nil {
-					filenameWithSuffix := path.Base(fullPath)
-					fileSuffix := path.Ext(filenameWithSuffix)
-					filenameOnly := strings.TrimSuffix(filenameWithSuffix, fileSuffix)
-					fullPath = uploadDir + filenameOnly+"_q75"+fileSuffix
-
-					err = utils.SaveImage(sImage, fullPath, fileSuffix, 75)
-
-				}
-
 				//返回响应
 				data := map[string]string {"message": "success", "path": fullPath}
 				controller.responseJson("0", data)
